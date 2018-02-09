@@ -307,9 +307,25 @@ extension UIImage {
 extension UIPasteboard {
     /// Fetch old text on pasteboard
     var oldText: String? {
+        let text = kUTTypeText as String
+        let plainText = kUTTypePlainText as String
         let utf8PlainText = kUTTypeUTF8PlainText as String
+        let utf16PlainText = kUTTypeUTF16PlainText as String
+        let utf16ExternalPlainText = kUTTypeUTF16ExternalPlainText as String
+        
+        var oldText: String?
         guard let firstItem = items.first else { return nil }
-        guard let plainText = firstItem[utf8PlainText] as? String else { return nil }
-        return plainText
+        if let text = firstItem[utf8PlainText] as? String {
+            oldText = text
+        } else if let text = firstItem[text] as? String {
+            oldText = text
+        } else if let text = firstItem[plainText] as? String {
+            oldText = text
+        } else if let text = firstItem[utf16PlainText] as? String {
+            oldText = text
+        } else if let text = firstItem[utf16ExternalPlainText] as? String {
+            oldText = text
+        }
+        return oldText
     }
 }
